@@ -97,7 +97,7 @@ Resources:
       ExtendedS3DestinationConfiguration:
         BucketARN: !GetAtt DataBucket.Arn
         BufferingHints:
-          IntervalInSeconds: 300
+          IntervalInSeconds: 60
         CompressionFormat: UNCOMPRESSED
         RoleARN: !GetAtt FirehoseRole.Arn
         Prefix: "no-compression/"
@@ -114,7 +114,7 @@ Resources:
       ExtendedS3DestinationConfiguration:
         BucketARN: !GetAtt DataBucket.Arn
         BufferingHints:
-          IntervalInSeconds: 300
+          IntervalInSeconds: 60
         CompressionFormat: GZIP
         RoleARN: !GetAtt FirehoseRole.Arn
         Prefix: "gzip/"
@@ -130,7 +130,7 @@ Resources:
       ExtendedS3DestinationConfiguration:
         BucketARN: !GetAtt DataBucket.Arn
         BufferingHints:
-          IntervalInSeconds: 300
+          IntervalInSeconds: 60
         CompressionFormat: ZIP
         RoleARN: !GetAtt FirehoseRole.Arn
         Prefix: "zip/"
@@ -147,7 +147,7 @@ Resources:
       ExtendedS3DestinationConfiguration:
         BucketARN: !GetAtt DataBucket.Arn
         BufferingHints:
-          IntervalInSeconds: 300
+          IntervalInSeconds: 60
         CompressionFormat: Snappy
         RoleARN: !GetAtt FirehoseRole.Arn
         Prefix: "snappy/"
@@ -163,7 +163,7 @@ Resources:
       ExtendedS3DestinationConfiguration:
         BucketARN: !GetAtt DataBucket.Arn
         BufferingHints:
-          IntervalInSeconds: 300
+          IntervalInSeconds: 60
         CompressionFormat: HADOOP_SNAPPY
         RoleARN: !GetAtt FirehoseRole.Arn
         Prefix: "hadoop-snappy/"
