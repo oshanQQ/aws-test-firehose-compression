@@ -30,7 +30,7 @@ STREAMS = [
 # 指定されたサイズのテストデータを生成
 def generate_test_data(size_mb):
     # 1MBあたりの文字数を概算（UTF-8では1文字1バイトとして）
-    chars_per_mb = 1024 * 1024
+    chars_per_mb = 1024
     total_chars = size_mb * chars_per_mb
 
     # ランダムな文字列を生成
