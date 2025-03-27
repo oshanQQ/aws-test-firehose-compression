@@ -45,25 +45,12 @@ def generate_test_data(size_mb=10):
 
 
 # データをFirehoseに送信する（バッチサイズの制限を考慮）
-def send_to_firehose(stream_name, data, batch_size=4 * 1024 * 1024):
-    # データをバイト列に変換
-    data_bytes = data.encode("utf-8")
-    data_size = len(data_bytes)
+def send_to_firehose(stream_name, data):
+    response = firehose.put_record(
+        DeliveryStreamName=stream_name, Record={"Data": data}
+    )
 
-    # 4MBごとにバッチ分割
-    for i in range(0, data_size, batch_size):
-        chunk = data_bytes[i : i + batch_size]
-
-        # Base64エンコードしてFirehoseに送信
-        encoded_data = base64.b64encode(chunk).decode("utf-8")
-
-        response = firehose.put_record(
-            DeliveryStreamName=stream_name, Record={"Data": encoded_data}
-        )
-
-        print(
-            f"Sent chunk {i//batch_size + 1} to {stream_name}, RecordId: {response['RecordId']}"
-        )
+    print(f"Sent data to {stream_name}, RecordId: {response['RecordId']}")
 
 
 def lambda_handler(event, context):
