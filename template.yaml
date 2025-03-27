@@ -100,7 +100,8 @@ Resources:
           IntervalInSeconds: 60
         CompressionFormat: UNCOMPRESSED
         RoleARN: !GetAtt FirehoseRole.Arn
-        Prefix: "no-compression/"
+        Prefix: "no-compression/!{timestamp:yyyy}/!{timestamp:MM}/!{timestamp:dd}/"
+        CustomTimeZone: Asia/Tokyo
         CloudWatchLoggingOptions:
           Enabled: true
           LogGroupName: !Ref NoCompressionFirehoseCloudWatchLogGroup
@@ -133,7 +134,8 @@ Resources:
           IntervalInSeconds: 60
         CompressionFormat: GZIP
         RoleARN: !GetAtt FirehoseRole.Arn
-        Prefix: "gzip/"
+        Prefix: "gzip/!{timestamp:yyyy}/!{timestamp:MM}/!{timestamp:dd}/"
+        CustomTimeZone: Asia/Tokyo
         CloudWatchLoggingOptions:
           Enabled: true
           LogGroupName: !Ref GzipFirehoseCloudWatchLogGroup
@@ -165,7 +167,8 @@ Resources:
           IntervalInSeconds: 60
         CompressionFormat: ZIP
         RoleARN: !GetAtt FirehoseRole.Arn
-        Prefix: "zip/"
+        Prefix: "zip/!{timestamp:yyyy}/!{timestamp:MM}/!{timestamp:dd}/"
+        CustomTimeZone: Asia/Tokyo
         CloudWatchLoggingOptions:
           Enabled: true
           LogGroupName: !Ref ZipFirehoseCloudWatchLogGroup
@@ -198,7 +201,8 @@ Resources:
           IntervalInSeconds: 60
         CompressionFormat: Snappy
         RoleARN: !GetAtt FirehoseRole.Arn
-        Prefix: "snappy/"
+        Prefix: "snappy/!{timestamp:yyyy}/!{timestamp:MM}/!{timestamp:dd}/"
+        CustomTimeZone: Asia/Tokyo
         CloudWatchLoggingOptions:
           Enabled: true
           LogGroupName: !Ref SnappyFirehoseCloudWatchLogGroup
@@ -230,7 +234,8 @@ Resources:
           IntervalInSeconds: 60
         CompressionFormat: HADOOP_SNAPPY
         RoleARN: !GetAtt FirehoseRole.Arn
-        Prefix: "hadoop-snappy/"
+        Prefix: "hadoop-snappy/!{timestamp:yyyy}/!{timestamp:MM}/!{timestamp:dd}/"
+        CustomTimeZone: Asia/Tokyo
         CloudWatchLoggingOptions:
           Enabled: true
           LogGroupName: !Ref HadoopSnappyFirehoseCloudWatchLogGroup
