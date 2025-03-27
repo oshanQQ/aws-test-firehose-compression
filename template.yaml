@@ -1,0 +1,183 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: Lambda to Firehose to S3 with different compression formats
+
+Parameters:
+  SystemName:
+    Type: String
+    Default: aws
+  EnvName:
+    Type: String
+    Default: test
+
+Resources:
+  #================================#
+  # S3バケット
+  #================================#
+
+  DataBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub ${SystemName}-${EnvName}-data-bucket-${AWS::AccountId}
+
+  #================================#
+  # Lambda実行ロール
+  #================================#
+
+  LambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Policies:
+        - PolicyName: !Sub ${SystemName}-${EnvName}-lambda-policy
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - firehose:PutRecord
+                Resource:
+                  - !GetAtt GzipFirehoseStream.Arn
+                  - !GetAtt SnappyFirehoseStream.Arn
+                  - !GetAtt ZipFirehoseStream.Arn
+                  - !GetAtt HadoopSnappyFirehoseStream.Arn
+                  - !GetAtt NoCompressionFirehoseStream.Arn
+
+  #================================#
+  # Firehoseサービスロール
+  #================================#
+
+  FirehoseRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: firehose.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: !Sub ${SystemName}-${EnvName}-firehose-policy
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - s3:PutObject
+                Resource:
+                  - !GetAtt DataBucket.Arn
+                  - !Sub "${DataBucket.Arn}/*"
+
+  #================================#
+  # 圧縮なしのFirehoseストリーム
+  #================================#
+
+  NoCompressionFirehoseStream:
+    Type: AWS::KinesisFirehose::DeliveryStream
+    Properties:
+      DeliveryStreamName: !Sub ${SystemName}-${EnvName}-no-compression-stream
+      DeliveryStreamType: DirectPut
+      ExtendedS3DestinationConfiguration:
+        BucketARN: !GetAtt DataBucket.Arn
+        BufferingHints:
+          IntervalInSeconds: 300
+        CompressionFormat: UNCOMPRESSED
+        RoleARN: !GetAtt FirehoseRole.Arn
+        Prefix: "no-compression/"
+
+  #================================#
+  # GZIP圧縮のFirehoseストリーム
+  #================================#
+
+  GzipFirehoseStream:
+    Type: AWS::KinesisFirehose::DeliveryStream
+    Properties:
+      DeliveryStreamName: !Sub ${SystemName}-${EnvName}-gzip-stream
+      DeliveryStreamType: DirectPut
+      ExtendedS3DestinationConfiguration:
+        BucketARN: !GetAtt DataBucket.Arn
+        BufferingHints:
+          IntervalInSeconds: 300
+        CompressionFormat: GZIP
+        RoleARN: !GetAtt FirehoseRole.Arn
+        Prefix: "gzip/"
+
+  #================================#
+  # ZIP圧縮のFirehoseストリーム
+  #================================#
+  ZipFirehoseStream:
+    Type: AWS::KinesisFirehose::DeliveryStream
+    Properties:
+      DeliveryStreamName: !Sub ${SystemName}-${EnvName}-zip-stream
+      DeliveryStreamType: DirectPut
+      ExtendedS3DestinationConfiguration:
+        BucketARN: !GetAtt DataBucket.Arn
+        BufferingHints:
+          IntervalInSeconds: 300
+        CompressionFormat: ZIP
+        RoleARN: !GetAtt FirehoseRole.Arn
+        Prefix: "zip/"
+
+  #================================#
+  # Snappy圧縮のFirehoseストリーム
+  #================================#
+
+  SnappyFirehoseStream:
+    Type: AWS::KinesisFirehose::DeliveryStream
+    Properties:
+      DeliveryStreamName: !Sub ${SystemName}-${EnvName}-snappy-stream
+      DeliveryStreamType: DirectPut
+      ExtendedS3DestinationConfiguration:
+        BucketARN: !GetAtt DataBucket.Arn
+        BufferingHints:
+          IntervalInSeconds: 300
+        CompressionFormat: Snappy
+        RoleARN: !GetAtt FirehoseRole.Arn
+        Prefix: "snappy/"
+
+  #=============================================#
+  # Hadoop互換Snappy圧縮のFirehoseストリーム
+  #=============================================#
+  HadoopSnappyFirehoseStream:
+    Type: AWS::KinesisFirehose::DeliveryStream
+    Properties:
+      DeliveryStreamName: !Sub ${SystemName}-${EnvName}-hadoop-snappy-stream
+      DeliveryStreamType: DirectPut
+      ExtendedS3DestinationConfiguration:
+        BucketARN: !GetAtt DataBucket.Arn
+        BufferingHints:
+          IntervalInSeconds: 300
+        CompressionFormat: HADOOP_SNAPPY
+        RoleARN: !GetAtt FirehoseRole.Arn
+        Prefix: "hadoop-snappy/"
+
+  #================================#
+  # データ生成と送信を行うLambda関数
+  #================================#
+
+  DataGeneratorFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub ${SystemName}-${EnvName}-data-generator-function
+      CodeUri: ./src/
+      Handler: app.lambda_handler
+      Runtime: python3.9
+      MemorySize: 1024
+      Timeout: 900
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Environment:
+        Variables:
+          GZIP_STREAM: !Ref GzipFirehoseStream
+          SNAPPY_STREAM: !Ref SnappyFirehoseStream
+          ZIP_STREAM: !Ref ZipFirehoseStream
+          HADOOP_SNAPPY_STREAM: !Ref HadoopSnappyFirehoseStream
+          NO_COMPRESSION_STREAM: !Ref NoCompressionFirehoseStream
