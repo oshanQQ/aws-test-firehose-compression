@@ -1,4 +1,4 @@
-# aws-test-datafirehose-compression
+# aws-test-firehose-compression
 
 Amazon DataFirehoseのデータ圧縮率を比較するためのテストアプリケーションです。
 
