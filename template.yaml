@@ -101,6 +101,22 @@ Resources:
         CompressionFormat: UNCOMPRESSED
         RoleARN: !GetAtt FirehoseRole.Arn
         Prefix: "no-compression/"
+        CloudWatchLoggingOptions:
+          Enabled: true
+          LogGroupName: !Ref NoCompressionFirehoseCloudWatchLogGroup
+          LogStreamName: !Ref NoCompressionFirehoseCloudWatchLogStream
+
+  NoCompressionFirehoseCloudWatchLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /aws/datafirehose/${SystemName}-${EnvName}-no-compression-stream-logs
+      RetentionInDays: 1
+
+  NoCompressionFirehoseCloudWatchLogStream:
+    Type: AWS::Logs::LogStream
+    Properties:
+      LogGroupName: !Ref NoCompressionFirehoseCloudWatchLogGroup
+      LogStreamName: !Sub ${SystemName}-${EnvName}-no-compression-stream-log-stream
 
   #================================#
   # GZIP圧縮のFirehoseストリーム
@@ -118,6 +134,22 @@ Resources:
         CompressionFormat: GZIP
         RoleARN: !GetAtt FirehoseRole.Arn
         Prefix: "gzip/"
+        CloudWatchLoggingOptions:
+          Enabled: true
+          LogGroupName: !Ref GzipFirehoseCloudWatchLogGroup
+          LogStreamName: !Ref GzipFirehoseCloudWatchLogStream
+
+  GzipFirehoseCloudWatchLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /aws/datafirehose/${SystemName}-${EnvName}-gzip-stream-logs
+      RetentionInDays: 1
+
+  GzipFirehoseCloudWatchLogStream:
+    Type: AWS::Logs::LogStream
+    Properties:
+      LogGroupName: !Ref GzipFirehoseCloudWatchLogGroup
+      LogStreamName: !Sub ${SystemName}-${EnvName}-gzip-stream-log-stream
 
   #================================#
   # ZIP圧縮のFirehoseストリーム
@@ -134,6 +166,22 @@ Resources:
         CompressionFormat: ZIP
         RoleARN: !GetAtt FirehoseRole.Arn
         Prefix: "zip/"
+        CloudWatchLoggingOptions:
+          Enabled: true
+          LogGroupName: !Ref ZipFirehoseCloudWatchLogGroup
+          LogStreamName: !Ref ZipFirehoseCloudWatchLogStream
+
+  ZipFirehoseCloudWatchLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /aws/datafirehose/${SystemName}-${EnvName}-zip-stream-logs
+      RetentionInDays: 1
+
+  ZipFirehoseCloudWatchLogStream:
+    Type: AWS::Logs::LogStream
+    Properties:
+      LogGroupName: !Ref ZipFirehoseCloudWatchLogGroup
+      LogStreamName: !Sub ${SystemName}-${EnvName}-zip-stream-log-stream
 
   #================================#
   # Snappy圧縮のFirehoseストリーム
@@ -151,6 +199,22 @@ Resources:
         CompressionFormat: Snappy
         RoleARN: !GetAtt FirehoseRole.Arn
         Prefix: "snappy/"
+        CloudWatchLoggingOptions:
+          Enabled: true
+          LogGroupName: !Ref SnappyFirehoseCloudWatchLogGroup
+          LogStreamName: !Ref SnappyFirehoseCloudWatchLogStream
+
+  SnappyFirehoseCloudWatchLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /aws/datafirehose/${SystemName}-${EnvName}-snappy-stream-logs
+      RetentionInDays: 1
+
+  SnappyFirehoseCloudWatchLogStream:
+    Type: AWS::Logs::LogStream
+    Properties:
+      LogGroupName: !Ref SnappyFirehoseCloudWatchLogGroup
+      LogStreamName: !Sub ${SystemName}-${EnvName}-snappy-stream-log-stream
 
   #=============================================#
   # Hadoop互換Snappy圧縮のFirehoseストリーム
@@ -167,6 +231,22 @@ Resources:
         CompressionFormat: HADOOP_SNAPPY
         RoleARN: !GetAtt FirehoseRole.Arn
         Prefix: "hadoop-snappy/"
+        CloudWatchLoggingOptions:
+          Enabled: true
+          LogGroupName: !Ref HadoopSnappyFirehoseCloudWatchLogGroup
+          LogStreamName: !Ref HadoopSnappyFirehoseCloudWatchLogStream
+
+  HadoopSnappyFirehoseCloudWatchLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /aws/datafirehose/${SystemName}-${EnvName}-hadoop-snappy-stream-logs
+      RetentionInDays: 1
+
+  HadoopSnappyFirehoseCloudWatchLogStream:
+    Type: AWS::Logs::LogStream
+    Properties:
+      LogGroupName: !Ref HadoopSnappyFirehoseCloudWatchLogGroup
+      LogStreamName: !Sub ${SystemName}-${EnvName}-hadoop-snappy-stream-log-stream
 
   #================================#
   # データ生成と送信を行うLambda関数
