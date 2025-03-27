@@ -101,7 +101,7 @@ Resources:
         CompressionFormat: UNCOMPRESSED
         RoleARN: !GetAtt FirehoseRole.Arn
         Prefix: no-compression/!{timestamp:yyyy}/!{timestamp:MM}/!{timestamp:dd}/
-        ErrorOutputPrefix: error/no-compression/!{timestamp:yyyy}/!{timestamp:MM}/!{timestamp:dd}/
+        ErrorOutputPrefix: error/no-compression/!{timestamp:yyyy}/!{timestamp:MM}/!{timestamp:dd}/!{firehose:error-output-type}/
         CustomTimeZone: Asia/Tokyo
         CloudWatchLoggingOptions:
           Enabled: true
@@ -136,7 +136,7 @@ Resources:
         CompressionFormat: GZIP
         RoleARN: !GetAtt FirehoseRole.Arn
         Prefix: gzip/!{timestamp:yyyy}/!{timestamp:MM}/!{timestamp:dd}/
-        ErrorOutputPrefix: error/gzip/!{timestamp:yyyy}/!{timestamp:MM}/!{timestamp:dd}/
+        ErrorOutputPrefix: error/gzip/!{timestamp:yyyy}/!{timestamp:MM}/!{timestamp:dd}/!{firehose:error-output-type}/
         CustomTimeZone: Asia/Tokyo
         CloudWatchLoggingOptions:
           Enabled: true
@@ -170,7 +170,7 @@ Resources:
         CompressionFormat: ZIP
         RoleARN: !GetAtt FirehoseRole.Arn
         Prefix: zip/!{timestamp:yyyy}/!{timestamp:MM}/!{timestamp:dd}/
-        ErrorOutputPrefix: error/zip/!{timestamp:yyyy}/!{timestamp:MM}/!{timestamp:dd}/
+        ErrorOutputPrefix: error/zip/!{timestamp:yyyy}/!{timestamp:MM}/!{timestamp:dd}/!{firehose:error-output-type}/
         CustomTimeZone: Asia/Tokyo
         CloudWatchLoggingOptions:
           Enabled: true
@@ -205,7 +205,7 @@ Resources:
         CompressionFormat: Snappy
         RoleARN: !GetAtt FirehoseRole.Arn
         Prefix: snappy/!{timestamp:yyyy}/!{timestamp:MM}/!{timestamp:dd}/
-        ErrorOutputPrefix: error/snappy/!{timestamp:yyyy}/!{timestamp:MM}/!{timestamp:dd}/
+        ErrorOutputPrefix: error/snappy/!{timestamp:yyyy}/!{timestamp:MM}/!{timestamp:dd}/!{firehose:error-output-type}/
         CustomTimeZone: Asia/Tokyo
         CloudWatchLoggingOptions:
           Enabled: true
@@ -239,7 +239,7 @@ Resources:
         CompressionFormat: HADOOP_SNAPPY
         RoleARN: !GetAtt FirehoseRole.Arn
         Prefix: hadoop-snappy/!{timestamp:yyyy}/!{timestamp:MM}/!{timestamp:dd}/
-        ErrorOutputPrefix: error/hadoop-snappy/!{timestamp:yyyy}/!{timestamp:MM}/!{timestamp:dd}/
+        ErrorOutputPrefix: error/hadoop-snappy/!{timestamp:yyyy}/!{timestamp:MM}/!{timestamp:dd}/!{firehose:error-output-type}/
         CustomTimeZone: Asia/Tokyo
         CloudWatchLoggingOptions:
           Enabled: true
