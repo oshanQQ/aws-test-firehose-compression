@@ -158,6 +158,7 @@ Resources:
   #================================#
   # ZIP圧縮のFirehoseストリーム
   #================================#
+
   ZipFirehoseStream:
     Type: AWS::KinesisFirehose::DeliveryStream
     Properties:
@@ -227,6 +228,7 @@ Resources:
   #=============================================#
   # Hadoop互換Snappy圧縮のFirehoseストリーム
   #=============================================#
+
   HadoopSnappyFirehoseStream:
     Type: AWS::KinesisFirehose::DeliveryStream
     Properties:
@@ -259,7 +261,7 @@ Resources:
       LogStreamName: !Sub ${SystemName}-${EnvName}-hadoop-snappy-stream-log-stream
 
   #================================#
-  # データ生成と送信を行うLambda関数
+  # データ生成と配信を行うLambda関数
   #================================#
 
   DataGeneratorFunction:
