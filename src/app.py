@@ -73,11 +73,5 @@ def lambda_handler(event, context):
             print(f"Generating and sending data to {stream}")
             data = generate_test_data(10)  # 10MBのデータ生成
             send_to_firehose(stream, data)
-
-        return {
-            "statusCode": 200,
-            "body": json.dumps("Data successfully sent to all Firehose streams"),
-        }
     except Exception as e:
         print(f"Error: {str(e)}")
-        return {"statusCode": 500, "body": json.dumps(f"Error: {str(e)}")}
