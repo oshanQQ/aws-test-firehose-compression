@@ -43,7 +43,10 @@ Resources:
             Statement:
               - Effect: Allow
                 Action:
+                  - firehose:DeleteDeliveryStream
                   - firehose:PutRecord
+                  - firehose:PutRecordBatch
+                  - firehose:UpdateDestination
                 Resource:
                   - !GetAtt GzipFirehoseStream.Arn
                   - !GetAtt SnappyFirehoseStream.Arn
@@ -72,6 +75,11 @@ Resources:
             Statement:
               - Effect: Allow
                 Action:
+                  - s3:AbortMultipartUpload
+                  - s3:GetBucketLocation
+                  - s3:GetObject
+                  - s3:ListBucket
+                  - s3:ListBucketMultipartUploads
                   - s3:PutObject
                 Resource:
                   - !GetAtt DataBucket.Arn
