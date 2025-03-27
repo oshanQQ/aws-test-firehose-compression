@@ -28,10 +28,10 @@ STREAMS = [
 
 
 # 指定されたサイズのテストデータを生成
-def generate_test_data(size_mb):
-    # 1MBあたりの文字数を概算（UTF-8では1文字1バイトとして）
-    chars_per_mb = 1024
-    total_chars = size_mb * chars_per_mb
+def generate_test_data(size_kb):
+    # 1KBあたりの文字数を概算（UTF-8では1文字1バイトとして）
+    chars_per_kb = 1024
+    total_chars = size_kb * chars_per_kb
 
     # ランダムな文字列を生成
     data = "".join(
@@ -58,7 +58,7 @@ def lambda_handler(event, context):
         # 各ストリーム用に10MBのデータを生成（合計で50MB程度）
         for stream in STREAMS:
             print(f"Generating and sending data to {stream}")
-            data = generate_test_data(1)  # 5MBのデータ生成
+            data = generate_test_data(1)  # 1KBのデータ生成
             send_to_firehose(stream, data)
     except Exception as e:
         print(f"Error: {str(e)}")
