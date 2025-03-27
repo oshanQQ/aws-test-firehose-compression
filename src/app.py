@@ -4,8 +4,6 @@ import boto3
 import random
 import string
 import time
-from io import BytesIO
-import base64
 
 # Firehoseクライアントの初期化
 firehose = boto3.client("firehose")
