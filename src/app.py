@@ -52,11 +52,8 @@ def send_to_firehose(stream_name, data):
 
 
 def lambda_handler(event, context):
-    try:
-        # 各ストリーム用に1KBのデータを生成（合計で5KB程度）
-        for stream in STREAMS:
-            print(f"Generating and sending data to {stream}")
-            data = generate_test_data(1)  # 1KBのデータ生成
-            send_to_firehose(stream, data)
-    except Exception as e:
-        print(f"Error: {str(e)}")
+    # 各ストリーム用に1KBのデータを生成（合計で5KB程度）
+    for stream in STREAMS:
+        print(f"Generating and sending data to {stream}")
+        data = generate_test_data(1)  # 1KBのデータ生成
+        send_to_firehose(stream, data)
