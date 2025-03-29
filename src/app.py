@@ -57,3 +57,8 @@ def lambda_handler(event, context):
         print(f"Generating and sending data to {stream}")
         data = generate_test_data(1)  # 1KBのデータ生成
         send_to_firehose(stream, data)
+
+    return {
+        "statusCode": 200,
+        "message": f"Successfully sent data to {len(STREAMS)} Firehose streams",
+    }
